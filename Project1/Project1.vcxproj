@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="allinit.c" />
     <ClCompile Include="vice.c" />
   </ItemGroup>
   <ItemGroup>

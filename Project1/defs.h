@@ -4,7 +4,9 @@
 #define NAME "vice 1.0"
 #define BRD_SQ_NUM 120
 
+#define MAXGAMEMOVES 2048
 
+typedef unsigned long long U64;
 
     enum {
     EMPTY, wP, wN, WB, WR, wQ, WK, bP, DN, BB, DR, bQ, BK
@@ -28,6 +30,54 @@
 
 
     enum { FALSE, TRUE };
+
+    enum {WKCA = 1, WQCA = 2, BKCA = 4, BQCA = 8};
+
+    typedef struct {
+        int move;
+        int castlePerm;
+        int enPas;
+        int fiftyMove;
+        U64 poskey;
+
+    } S_UNDO;
+    
+    typedef struct {
+        int pieces[BRD_SQ_NUM];
+        U64 pawns[3];
+
+        int KingSq[2];
+
+        int side; //side to move
+        int enPas;//en Passant square
+        int fiftyMove;//rule
+
+        int ply;//half moves
+        int hisPly;//total half moves
+
+        U64 posKey; // unique key for each position
+        
+        int castlePerm;
+
+        int pceNum[13];
+        int bigPce[3];//pieces bigger than pawns
+        int majPce[3];//pieces like queen and rooks
+        int minPce[3];//pieces like bishops and knights
+        
+        S_UNDO history[MAXGAMEMOVES];
+
+    } S_BOARD;
+
+    /* GLOBALS */   
+    extern int Sq120toSq64[BRD_SQ_NUM];
+    extern int Sq64toSq120[64];
+
+    /* FUNCTIONS */
+    extern void AllInit();
+
+    /* MACROS*/
+    #define FR2SQ(f,r) ((21 + (f)) + ((r)*10))
+
 
 #endif // !DEFS_H
 
