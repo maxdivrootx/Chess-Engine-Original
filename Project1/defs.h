@@ -1,6 +1,27 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+#include "stdlib.h"
+
+/*Define Debug(for ASSERTION )*/
+#ifndef DEBUG
+#define ASSERT(n)
+#else
+#define ASSERT(n) \
+if (!(n)) {
+printf("%s - Failed", #n); \
+printf("On %s ", __DATE__); \
+printf("At %s ", __TIME__); \
+printf("In File %s ", __FILE__); \
+printf(" At Line %d ", __LINE__); \
+exit(1);
+
+}
+
+
+#endif // !1
+
+
 #define NAME "vice 1.0"
 #define BRD_SQ_NUM 120
 
@@ -24,7 +45,7 @@ typedef unsigned long long U64;
         A5 = 61, B5, C5, D5, E5, F5, G5, H5,
         A6 = 71, B6, C6, D6, E6, F6, G6, H6,
         A7 = 81, B7, C7, D7, E7, F7, G7, H7,
-        A8 = 91, B8, C8, D8, E8, F8, G8, H8, NO_SQ
+        A8 = 91, B8, C8, D8, E8, F8, G8, H8, NO_SQ, OFFBOARD
     };
 
 
@@ -68,16 +89,48 @@ typedef unsigned long long U64;
 
     } S_BOARD;
 
+    // piece list
+    int pList[13][10];
+
     /* GLOBALS */   
     extern int Sq120toSq64[BRD_SQ_NUM];
     extern int Sq64toSq120[64];
+    extern U64 SetMask[64];
+    extern U64 ClearMask[64];
+    U64 PieceKeys[13][120];
+    U64 SideKey;
+    U64 CastleKeys[16];
+
+    
 
     /* FUNCTIONS */
+
+    //init.c
     extern void AllInit();
+
+
+
+    //bitboards.c
+    extern void PrintBitBoard(U64 bb);
+    extern int PopBit(U64* bb);
+    extern int CountBits(U64 b);
+    
+    //hashkeys.c
+    extern U64 GeneratePosKey(const S_BOARD* pos);
+
+    //boards.c
+    extern void ResetBoard(S_BOARD* pos);
+
 
     /* MACROS*/
     #define FR2SQ(f,r) ((21 + (f)) + ((r)*10))
+    #define SQ64(sq120) Sq120toSq64[sq120]
+    #define SQ120(sq64) (Sq64ToSq120[(sq64)])
+    #define POP(b) PopBit(b)
+    #define CNT(b) CountBits(b)
+    
 
+    
 
 #endif // !DEFS_H
 
